@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todos los Productos</title>
     <link href="/css/main.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
@@ -10,308 +10,58 @@
 </head>
 <body>
 
-<!-- Encabezado -->
 <header class="container-fluid bg-dark d-flex justify-content-center">
     <p class="text-success mb-0 p-2 fs-6">Contactanos +51 925 876 778</p>
 </header>
 
-<!-- Barra de navegación -->
 <nav class="navbar navbar-expand-lg navbar-light p-3" id="menu">
     <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="/productos">
             <img src="/img/logo.png" alt="Logo" height="60" class="me-2">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link text-success" href="/productos">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-success" href="#">Productos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-success" href="/productos#seccion-contacto">Contacto</a>
-                </li>
+                <li class="nav-item"><a class="nav-link text-success" href="/productos">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link text-success" href="#">Productos</a></li>
+                <li class="nav-item"><a class="nav-link text-success" href="/productos#seccion-contacto">Contacto</a></li>
             </ul>
         </div>
     </div>
 </nav>
 
-<!-- Sección de Productos -->
 <section class="container my-5" id="productos">
     <h2 class="text-center mb-4">Productos</h2>
     <div class="row">
-        <!-- Producto 1 -->
-        <div class="col-md-3 col-12 mb-4">
+        <div class="col-md-3 mb-4" th:each="producto : ${todosLosProductos}">
             <div class="card h-100">
-                <div id="carouselProducto1" class="carousel slide" data-bs-ride="carousel">
+                <div th:attr="id='carouselProducto__' + ${producto.id}" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img alt="Audífonos" class="d-block w-100" th:src="@{/img/A9Plus_01/A9Plus_01.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Audífonos" class="d-block w-100" th:src="@{/img/A9Plus_01/A9Plus_02.avif}"/>
+                        <div class="carousel-item"
+                             th:each="img, iterStat : ${producto.imagenes.split(',')}"
+                             th:classappend="${iterStat.index == 0} ? ' active'">
+                            <img class="d-block w-100" th:src="@{${img}}" alt="Imagen producto"/>
                         </div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto1" data-bs-slide="prev">
-                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
+                    <button class="carousel-control-prev" type="button"
+                            th:attr="data-bs-target='#carouselProducto__' + ${producto.id}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto1" data-bs-slide="next">
-                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
+                    <button class="carousel-control-next" type="button"
+                            th:attr="data-bs-target='#carouselProducto__' + ${producto.id}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
                     </button>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Audífonos A9 Plus</h5>
-                    <p class="card-text">S/. 45.00</p>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto1">
-                        <i class="bi bi-cart-plus"></i>
-                        Comprar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 2 -->
-        <div class="col-md-3 col-12 mb-4">
-            <div class="card h-100">
-                <div id="carouselProducto2" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img alt="Cargador" class="d-block w-100" th:src="@{/img/Carg. Smartilike_67W/Carga.Smartilike_67W_01.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Cargador" class="d-block w-100" th:src="@{/img/Carg. Smartilike_67W/Carg. Smartilike_67W_02.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Cargador" class="d-block w-100" th:src="@{/img/Carg. Smartilike_67W/Carg. Smartilike_67W_03.avif}"/>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto2" data-bs-slide="prev">
-                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto2" data-bs-slide="next">
-                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Cargador Smartilike 35W</h5>
-                    <p class="card-text">S/. 25.00</p>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto2">
-                        <i class="bi bi-cart-plus"></i>
-                        Comprar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 3 -->
-        <div class="col-md-3 col-12 mb-4">
-            <div class="card h-100">
-                <div id="carouselProducto3" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img alt="Producto 3" class="d-block w-100" th:src="@{/img/Airpods_Pro2/Airpods_Pro2_01.jpg}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 3" class="d-block w-100" th:src="@{/img/Airpods_Pro2/Airpods_Pro2_02.jpg}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 3" class="d-block w-100" th:src="@{/img/Airpods_Pro2/Airpods_Pro2_03.jpg}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 3" class="d-block w-100" th:src="@{/img/Airpods_Pro2/Airpods_Pro2_04.jpg}"/>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto3" data-bs-slide="prev">
-                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto3" data-bs-slide="next">
-                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Airpods Pro</h5>
-                    <p class="card-text">S/. 99.00</p>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto3">
-                        <i class="bi bi-cart-plus"></i>
-                        Comprar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 4 -->
-        <div class="col-md-3 col-12 mb-4">
-            <div class="card h-100">
-                <div id="carouselProducto4" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img alt="Producto 4" class="d-block w-100" th:src="@{/img/Carg. Smartilike_35W/Carg. Smartilike_35W_01.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 4" class="d-block w-100" th:src="@{/img/Carg. Smartilike_35W/Carg. Smartilike_35W_02.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 4" class="d-block w-100" th:src="@{/img/Carg. Smartilike_35W/Carg. Smartilike_35W_03.avif}"/>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto4" data-bs-slide="prev">
-                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto4" data-bs-slide="next">
-                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Cargador Smartilike 35W</h5>
-                    <p class="card-text">S/. 40.00</p>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto4">
-                        <i class="bi bi-cart-plus"></i>
-                        Comprar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 5 -->
-        <div class="col-md-3 col-12 mb-4">
-            <div class="card h-100">
-                <div id="carouselProducto5" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img alt="Producto 5" class="d-block w-100" th:src="@{/img/Carg. Smartilike_120W/Carg. Smartilike_120W_01.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 5" class="d-block w-100" th:src="@{/img/Carg. Smartilike_120W/Carg. Smartilike_120W_02.avif}"/>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto5" data-bs-slide="prev">
-                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto5" data-bs-slide="next">
-                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Cargador Smartilike 120W</h5>
-                    <p class="card-text">S/. 60.00</p>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto5">
-                        <i class="bi bi-cart-plus"></i>
-                        Comprar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 6 -->
-        <div class="col-md-3 col-12 mb-4">
-            <div class="card h-100">
-                <div id="carouselProducto6" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img alt="Producto 6" class="d-block w-100" th:src="@{/img/Carg. Smartilike_3mAh/Carg. Smartilike_3mAh_01.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 6" class="d-block w-100" th:src="@{/img/Carg. Smartilike_3mAh/Carg. Smartilike_3mAh_02.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 6" class="d-block w-100" th:src="@{/img/Carg. Smartilike_3mAh/Carg. Smartilike_3mAh_03.avif}"/>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto6" data-bs-slide="prev">
-                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto6" data-bs-slide="next">
-                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Cargador Smartilike 3mAh</h5>
-                    <p class="card-text">S/. 85.00</p>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto6">
-                        <i class="bi bi-cart-plus"></i>
-                        Comprar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producto 7 -->
-        <div class="col-md-3 col-12 mb-4">
-            <div class="card h-100">
-                <div id="carouselProducto7" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img alt="Producto 7" class="d-block w-100" th:src="@{/img/Zero_SE60/Zero_SE60_01.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 7" class="d-block w-100" th:src="@{/img/Zero_SE60/Zero_SE60_02.avif}"/>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto7" data-bs-slide="prev">
-                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto7" data-bs-slide="next">
-                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Audifonos Zero SE60</h5>
-                    <p class="card-text">S/. 45.00</p>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto7">
-                        <i class="bi bi-cart-plus"></i>
-                        Comprar
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Producto 8 -->
-        <div class="col-md-3 col-12 mb-4">
-            <div class="card h-100">
-                <div id="carouselProducto8" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img alt="Producto 8" class="d-block w-100" th:src="@{/img/KZ_EDX_Pro/KZ_EDX-Pro_01.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 8" class="d-block w-100" th:src="@{/img/KZ_EDX_Pro/KZ_EDX-Pro_02.avif}"/>
-                        </div>
-                        <div class="carousel-item">
-                            <img alt="Producto 8" class="d-block w-100" th:src="@{/img/KZ_EDX_Pro/KZ_EDX-Pro_03.avif}"/>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto8" data-bs-slide="prev">
-                        <span aria-hidden="true" class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto8" data-bs-slide="next">
-                        <span aria-hidden="true" class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"> Audifonos KZ EDX Pro</h5>
-                    <p class="card-text">S/. 25.00</p>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto8">
-                        <i class="bi bi-cart-plus"></i>
-                        Comprar
+                    <h5 class="card-title" th:text="${producto.nombre}">Nombre</h5>
+                    <p class="card-text">S/. <span th:text="${producto.precio}">0.00</span></p>
+                    <button class="btn btn-success" data-bs-toggle="modal"
+                            th:data-bs-target="'#modalProducto__' + ${producto.id}">
+                        <i class="bi bi-cart-plus"></i> Comprar
                     </button>
                 </div>
             </div>
@@ -319,272 +69,41 @@
     </div>
 </section>
 
-
-<!-- Modales -->
-
-<!-- Modal para Producto 1 -->
-<div class="modal fade" id="modalProducto1" tabindex="-1" aria-labelledby="modalProducto1Label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProducto1Label">Características del producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Audífonos A9 Plus</strong></p>
-                <ul>
-                    <li>Conexión Bluetooth 5.0</li>
-                    <li>Cancelación activa de ruido (ANC)</li>
-                    <li>Batería de larga duración: 20 horas de uso continuo</li>
-                    <li>Resistencia al agua IPX5</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x"></i> Cerrar
-                </button>
-
-                <a href="https://wa.me/51925876778?text=Hola,%20estoy%20interesado%20en%20comprar%20los%20aud%C3%ADfonos%20inal%C3%A1mbricos" target="_blank">
-                    <button type="button" class="btn btn-success">
-                        <i class="bi bi-cart-plus"></i> Confirmar
+<!-- MODALES -->
+<div th:each="producto : ${todosLosProductos}">
+    <div class="modal fade" th:id="'modalProducto__' + ${producto.id}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Características del producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong th:text="${producto.nombre}"></strong></p>
+                    <ul>
+                        <li th:each="car : ${producto.caracteristicas.split(',')}" th:text="${car}">característica</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x"></i> Cerrar
                     </button>
-                </a>
+                    <a th:href="'https://wa.me/51925876778?text=Hola,%20deseo%20adquirir%20el%20producto:%20' + ${#strings.replace(producto.nombre, ' ', '%20')}" target="_blank">
+                        <button type="button" class="btn btn-success">
+                            <i class="bi bi-cart-plus"></i> Confirmar
+                        </button>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal para Producto 2 -->
-<div class="modal fade" id="modalProducto2" tabindex="-1" aria-labelledby="modalProducto2Label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProducto2Label">Características del producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Cargador Smartilike 35W<</strong></p>
-                <ul>
-                    <li>Carga rápida de hasta 67W</li>
-                    <li>Compatible con dispositivos USB-C</li>
-                    <li>Protección contra sobrecalentamiento</li>
-                    <li>Compacto y portátil</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x"></i> Cerrar
-                </button>
-
-                <a href="https://wa.me/51925876778?text=Hola,%20estoy%20interesado%20en%20comprar%20el%20cargador%20r%C3%A1pido%20USB" target="_blank">
-                    <button type="button" class="btn btn-success">
-                        <i class="bi bi-cart-plus"></i> Confirmar
-                    </button>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para Producto 3 -->
-<div class="modal fade" id="modalProducto3" tabindex="-1" aria-labelledby="modalProducto3Label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProducto3Label">Características del producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Airpods Pro</strong></p>
-                <ul>
-                    <li>Cancelación activa de ruido</li>
-                    <li>Sonido envolvente y personalizable</li>
-                    <li>Batería de larga duración con carga rápida</li>
-                    <li>Resistencia al agua</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x"></i> Cerrar
-                </button>
-                <a href="https://wa.me/51925876778?text=Hola,%20estoy%20interesado%20en%20comprar%20los%20Airpods%20Pro" target="_blank">
-                    <button type="button" class="btn btn-success">
-                        <i class="bi bi-cart-plus"></i> Confirmar
-                    </button>
-
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal para Producto 4 -->
-<div class="modal fade" id="modalProducto4" tabindex="-1" aria-labelledby="modalProducto4Label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProducto4Label">Características del producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Cargador Smartilike 35W</strong></p>
-                <ul>
-                    <li>Carga rápida de hasta 35W</li>
-                    <li>Compatible con dispositivos USB-C y USB-A</li>
-                    <li>Protección contra sobrecalentamiento y sobrecarga</li>
-                    <li>Compacto y eficiente</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x"></i> Cerrar
-                </button>
-
-                <a href="https://wa.me/51925876778?text=Hola,%20estoy%20interesado%20en%20comprar%20el%20cargador%20Smartilike%2035W" target="_blank">
-                    <button type="button" class="btn btn-success">
-                        <i class="bi bi-cart-plus"></i> Confirmar
-                    </button>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal para Producto 5 -->
-<div class="modal fade" id="modalProducto5" tabindex="-1" aria-labelledby="modalProducto5Label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProducto5Label">Características del producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Cargador Smartilike 120W</strong></p>
-                <ul>
-                    <li>Carga rápida de hasta 120W</li>
-                    <li>Compatible con dispositivos USB-C y USB-A</li>
-                    <li>Protección avanzada contra sobrecarga y sobrecalentamiento</li>
-                    <li>Compacto y alto rendimiento</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x"></i> Cerrar
-                </button>
-
-                <a href="https://wa.me/51925876778?text=Hola,%20estoy%20interesado%20en%20comprar%20el%20cargador%20Smartilike%20120W" target="_blank">
-                    <button type="button" class="btn btn-success">
-                        <i class="bi bi-cart-plus"></i> Confirmar
-                    </button>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal para Producto 6 -->
-<div class="modal fade" id="modalProducto6" tabindex="-1" aria-labelledby="modalProducto6Label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProducto6Label">Características del producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Cargador Smartilike 3mAh</strong></p>
-                <ul>
-                    <li>Capacidad de 3mAh para carga eficiente</li>
-                    <li>Compatible con dispositivos de carga rápida</li>
-                    <li>Protección contra sobrecalentamiento y sobrecarga</li>
-                    <li>Compacto y fácil de transportar</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x"></i> Cerrar
-                </button>
-
-                <a href="https://wa.me/51925876778?text=Hola,%20estoy%20interesado%20en%20comprar%20el%20cargador%20Smartilike%203mAh" target="_blank">
-                    <button type="button" class="btn btn-success">
-                        <i class="bi bi-cart-plus"></i> Confirmar
-                    </button>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal para Producto 7 -->
-<div class="modal fade" id="modalProducto7" tabindex="-1" aria-labelledby="modalProducto7Label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProducto7Label">Características del producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Audífonos Zero SE60</strong></p>
-                <ul>
-                    <li>Conexión Bluetooth 5.0</li>
-                    <li>Cancelación activa de ruido (ANC)</li>
-                    <li>Batería de larga duración: 25 horas de uso continuo</li>
-                    <li>Resistencia al agua IPX6</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x"></i> Cerrar
-                </button>
-
-                <a href="https://wa.me/51925876778?text=Hola,%20estoy%20interesado%20en%20comprar%20los%20Audífonos%20Zero%20SE60" target="_blank">
-                    <button type="button" class="btn btn-success">
-                        <i class="bi bi-cart-plus"></i> Confirmar
-                    </button>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal para Producto 8 -->
-<div class="modal fade" id="modalProducto8" tabindex="-1" aria-labelledby="modalProducto8Label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProducto8Label">Características del producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Audífonos KZ EDX Pro</strong></p>
-                <ul>
-                    <li>Conexión de 3.5mm para dispositivos universales</li>
-                    <li>Sonido claro y de alta calidad</li>
-                    <li>Conductor dinámico para graves mejorados</li>
-                    <li>Diseño ergonómico para comodidad prolongada</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x"></i> Cerrar
-                </button>
-
-                <a href="https://wa.me/51925876778?text=Hola,%20estoy%20interesado%20en%20comprar%20los%20Audífonos%20KZ%20EDX%20Pro" target="_blank">
-                    <button type="button" class="btn btn-success">
-                        <i class="bi bi-cart-plus"></i> Confirmar
-                    </button>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-<!-- Pie de Pagina -->
 <footer class="w-100 d-flex align-items-center justify-content-center flex-wrap">
     <p class="fs-5 px-3 pt-3">Fantec © Todos los Derechos Reservados 2025</p>
     <div id="iconos">
         <a href="https://www.instagram.com/_fantec_/" target="_blank"><i class="bi bi-instagram"></i></a>
         <a href="https://www.tiktok.com/@fantec_" target="_blank"><i class="bi bi-tiktok"></i></a>
-
     </div>
 </footer>
 
@@ -592,8 +111,7 @@
     <i class="bi bi-whatsapp"></i>
 </a>
 
-
 <script src="/js/main.js"></script>
-<script crossorigin="anonymous" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
