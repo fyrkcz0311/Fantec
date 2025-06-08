@@ -17,10 +17,17 @@ public class ProductoController {
 
     @GetMapping("/productos")
     public String productos(Model model) {
-        List<Producto> productos = productoRepository.findAll(); // desde BD
+        List<Producto> productos = productoRepository.findAll()
+                .stream()
+                .filter(p -> p.getNombre().equalsIgnoreCase("Audífonos A9 Plus") ||
+                        p.getNombre().equalsIgnoreCase("Cargador Smartilike 67W") ||
+                        p.getNombre().equalsIgnoreCase("Airpods Pro"))
+                .toList();
+
         model.addAttribute("productos", productos);
         return "productos";
     }
+
 
     @GetMapping("/todos-los-productos")
     public String verTodosLosProductos(Model model) {
