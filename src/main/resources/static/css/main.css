@@ -1,0 +1,345 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+/* Estilo*/
+body {
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+/* #intro */
+#intro {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 5%;
+}
+
+/* Menú */
+#menu a, button {
+    font-size: 18px !important;
+    font-weight: 600;
+}
+
+#menu a {
+    color: #009900;
+}
+
+/* Estilo para enlaces de navegación */
+#menu .nav-link {
+    font-weight: 600;
+    font-size: 18px;
+    color: #009900 !important;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Efecto hover: cambia color y eleva levemente el texto */
+#menu .nav-link:hover {
+    color: #ffffff !important;
+    background-color: #007700;
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Ajuste del logo */
+.navbar-brand img {
+    height: 60px;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand img:hover {
+    transform: scale(1.05);
+}
+
+/* Slider */
+.carousel-inner {
+    height: auto !important;
+    object-fit: cover;
+}
+
+/* Media Queries Pantallas Pequeñas */
+@media (max-width: 768px) {
+    #intro,
+    #equipo {
+        width: 90% !important;
+        margin: 0 auto;
+    }
+
+    #equipo p {
+        display: block;
+        font-size: 1rem;
+        padding: 20px;
+    }
+
+    .servicio-fila {
+        width: 100% !important;
+        text-align: center;
+    }
+
+    #bg-contactos {
+        top: -110px;
+    }
+
+    #menu a, button {
+        font-size: 16px;
+    }
+
+    #carouselExample {
+        height: 250px !important;
+        overflow: hidden;
+
+        .carousel-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    #intro h1 {
+        font-size: 1.5rem;
+    }
+
+    #whatsapp-float-btn {
+        font-size: 30px;
+        padding: 15px;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .img-equipo {
+        width: 100%;
+        height: auto;
+    }
+
+    #intro img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #intro p {
+        white-space: normal;
+        word-wrap: break-word;
+        margin-top: 10px;
+    }
+}
+/* Productos */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+.card-body button {
+    margin-top: 15px;
+}
+
+
+
+/* Media Queries Pantallas anchas */
+@media (max-width: 1200px) {
+    #local {
+        flex-wrap: wrap;
+        padding-top: 30px;
+    }
+
+    .wrapper {
+        width: 90%;
+        margin: auto;
+        padding-top: 50px;
+    }
+
+    #equipo .img-equipo {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .container {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+}
+
+/* Media Queries Pantallas super Pequeñas */
+@media (max-width: 476px) {
+    .icono-wrap {
+        flex-wrap: wrap;
+        justify-content: center !important;
+    }
+
+    #intro {
+        width: 90% !important;
+        margin: 0 auto;
+        padding-top: 10%;
+    }
+
+    #intro h1 {
+        font-size: 1.25rem;
+        line-height: 1.3;
+    }
+
+    #intro p {
+        font-size: 1rem;
+        margin-top: 10px;
+        padding: 0 10px;
+    }
+}
+
+/* Sección Mapa */
+#local {
+    margin-top: 50px;
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 300px;
+}
+
+.mapa {
+    background: url(../img/mapa.png);
+    width: 80%;
+    height: 600px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    margin-left: 50px;
+}
+
+.wrapper-local {
+    width: 50%;
+    margin-left: 100px;
+    padding-top: 150px;
+}
+
+/* Sección Equipo */
+#equipo {
+    width: 100%;
+    height: auto;
+    background-repeat: no-repeat;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+#equipo .img-equipo {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 500px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+#numeros-local {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#numeros-local div {
+    padding: 0 20px 0 0;
+    text-align: left;
+    height: 48px;
+}
+
+#numeros-local div:not(:last-child) {
+    border-right: 2px solid #009900;
+}
+
+#numeros-local div:not(:first-child) {
+    padding-left: 20px;
+}
+
+#numeros-local p {
+    margin: 0;
+}
+
+/* Contactos */
+#bg-contactos {
+    position: relative;
+    top: -130px;
+}
+
+#seccion-contacto {
+    min-height: 500px;
+    position: relative;
+}
+
+/* Contactos Formularios */
+#contenedor-formulario {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fbfafa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#titulo-formulario {
+    color: black;
+}
+
+/* Footer */
+footer {
+    background: #000000;
+    min-height: 100px;
+    padding-top: 20px;
+    box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.2);
+}
+
+footer p {
+    color: #f3f3f3;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#iconos i {
+    font-size: 26px;
+    padding: 0 8px;
+    color: #f3f3f3;
+    margin: 0 5px;
+}
+
+/* Carrusel */
+.carousel-inner img {
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #009900;
+    border-radius: 50%;
+    padding: 10px;
+}
+
+/* Icono de Wsp */
+#whatsapp-float-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366;
+    color: white;
+    font-size: 45px;
+    padding: 20px;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+#whatsapp-float-btn:hover {
+    transform: scale(1.1);
+}
+
+#whatsapp-float-btn i {
+    margin: 0;
+}
