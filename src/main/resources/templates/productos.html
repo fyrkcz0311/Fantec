@@ -196,25 +196,28 @@
             <p class="fs-5">Estamos aquí para ayudarte</p>
         </div>
         <!-- Formulario con validación -->
-        <form action="/enviar-mensaje" method="POST">
+        <form action="/enviar-mensaje" method="POST" th:object="${contacto}">
             <div class="mb-3">
-                <input class="form-control" id="email" name="email" placeholder="Correo" type="email" required/>
+                <input class="form-control" th:field="*{email}" placeholder="Correo" type="email" />
+                <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
             </div>
             <div class="mb-3">
-                <input class="form-control" id="name" name="name" placeholder="Nombre" type="text"
-                       pattern="^[A-Za-z\s]+$" title="El nombre solo puede contener letras y espacios" required/>
+                <input class="form-control" th:field="*{name}" placeholder="Nombre" type="text" />
+                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
             </div>
             <div class="mb-3">
-                <input class="form-control" id="phone" name="phone" placeholder="Teléfono" type="tel"
-                       pattern="^\d+$" title="El teléfono solo puede contener números" required/>
+                <input class="form-control" th:field="*{phone}" placeholder="Teléfono" type="tel" />
+                <div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
             </div>
             <div class="mb-3">
-                <textarea class="form-control" id="message" name="message" placeholder="Escribe aquí tu consulta" rows="4" required></textarea>
+                <textarea class="form-control" th:field="*{message}" placeholder="Escribe aquí tu consulta" rows="4"></textarea>
+                <div class="text-danger" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></div>
             </div>
             <div class="mb-3">
                 <button class="btn btn-success w-100 fs-5" type="submit">Enviar Mensaje</button>
             </div>
         </form>
+
     </div>
 
 </section>

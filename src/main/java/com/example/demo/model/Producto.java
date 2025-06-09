@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 
 @Entity
@@ -12,9 +11,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @ToString
 public class Producto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nombre;
     private BigDecimal precio;
 
@@ -24,5 +25,7 @@ public class Producto {
     @Column(length = 1000)
     private String caracteristicas;
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 }
-

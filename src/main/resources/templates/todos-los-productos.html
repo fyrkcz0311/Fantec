@@ -32,10 +32,21 @@
     </div>
 </nav>
 
+<!-- Filtro de Categorías -->
+<div class="container my-5 text-center">
+    <h4 class="mb-3">Filtrar por Categoría</h4>
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+        <a th:each="cat : ${categorias}"
+           class="btn btn-outline-success"
+           th:href="@{/todos-los-productos/categoria/{id}(id=${cat.id})}"
+           th:text="${cat.nombre}">Categoría</a>
+    </div>
+</div>
+
 <section class="container my-5" id="productos">
     <h2 class="text-center mb-4">Productos</h2>
     <div class="row">
-        <div class="col-md-3 mb-4" th:each="producto : ${todosLosProductos}">
+        <div class="col-md-3 mb-4" th:each="producto : ${productos}">
             <div class="card h-100">
                 <div th:attr="id='carouselProducto__' + ${producto.id}" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
@@ -56,8 +67,11 @@
                         <span class="visually-hidden">Siguiente</span>
                     </button>
                 </div>
-                <div class="card-body">
+                <div class="card-body text-center">
                     <h5 class="card-title" th:text="${producto.nombre}">Nombre</h5>
+                    <p class="card-text text-muted">
+                        <strong>Categoría:</strong> <span th:text="${producto.categoria.nombre}">Categoría</span>
+                    </p>
                     <p class="card-text">S/. <span th:text="${producto.precio}">0.00</span></p>
                     <button class="btn btn-success" data-bs-toggle="modal"
                             th:data-bs-target="'#modalProducto__' + ${producto.id}">
@@ -70,7 +84,7 @@
 </section>
 
 <!-- MODALES -->
-<div th:each="producto : ${todosLosProductos}">
+<div th:each="producto : ${productos}">
     <div class="modal fade" th:id="'modalProducto__' + ${producto.id}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -99,7 +113,7 @@
     </div>
 </div>
 
-<footer class="w-100 d-flex align-items-center justify-content-center flex-wrap">
+<footer class="w-100 d-flex align-items-center justify-content-center flex-wrap mt-5">
     <p class="fs-5 px-3 pt-3">Fantec © Todos los Derechos Reservados 2025</p>
     <div id="iconos">
         <a href="https://www.instagram.com/_fantec_/" target="_blank"><i class="bi bi-instagram"></i></a>
