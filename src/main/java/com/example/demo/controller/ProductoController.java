@@ -31,7 +31,7 @@ public class ProductoController {
 
     @GetMapping("/todos-los-productos")
     public String verTodosLosProductos(Model model) {
-        List<Producto> todosLosProductos = productoRepository.findAll(); // desde BD
+        List<Producto> todosLosProductos = productoRepository.findAll();
         model.addAttribute("todosLosProductos", todosLosProductos);
         return "todos-los-productos";
     }

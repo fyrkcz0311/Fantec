@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mensaje Enviado</title>
-  <link rel="stylesheet" href="/css/contacto.css">
+  <link rel="stylesheet" th:href="@{/css/contacto.css}">
 </head>
 <body>
 
 <div class="container">
-  <h1>Gracias por contactarnos, <span class="highlight" th:text="${name}"></span>!</h1>
+  <h1>Gracias por contactarnos, <span class="highlight" th:text="${name}">Usuario</span>!</h1>
   <p>Hemos recibido tu mensaje y nos pondremos en contacto contigo pronto.</p>
-  <a href="/productos" class="btn">Volver al inicio</a>
+  <a class="btn" th:href="@{/productos}">Volver al inicio</a>
 </div>
 
 </body>
