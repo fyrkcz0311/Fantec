@@ -25,7 +25,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link text-success" href="/productos">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link text-success" href="#">Productos</a></li>
+                <li class="nav-item"><a class="nav-link text-success" href="/todos-los-productos">Productos</a></li>
                 <li class="nav-item"><a class="nav-link text-success" href="/productos#seccion-contacto">Contacto</a></li>
             </ul>
         </div>
@@ -36,6 +36,10 @@
 <div class="container my-5 text-center">
     <h4 class="mb-3">Filtrar por Categoría</h4>
     <div class="d-flex flex-wrap justify-content-center gap-2">
+        <!-- Botón "Todos" -->
+        <a class="btn btn-outline-success" th:href="@{/todos-los-productos}">Todos</a>
+
+        <!-- Botones por categoría -->
         <a th:each="cat : ${categorias}"
            class="btn btn-outline-success"
            th:href="@{/todos-los-productos/categoria/{id}(id=${cat.id})}"
