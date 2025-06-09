@@ -185,42 +185,53 @@
 
 <!-- Contacto Section -->
 <section class="border-bottom border-secondary border-2" id="seccion-contacto">
-    <div id="bg-contactos">
-    </div>
+    <div id="bg-contactos"></div>
 
     <!-- Formulario -->
-    <div class="container border-top border-primary" id="contenedor-formulario" style="max-width: 500px">
+    <div class="container border-top border-primary" id="contenedor-formulario" style="max-width: 500px; margin-bottom: 80px; ">
         <div class="text-center mb-4" id="titulo-formulario">
             <div><img alt="" class="img-fluid ps-5" src="/img/support.png"/></div>
             <h2>Contactanos</h2>
             <p class="fs-5">Estamos aquí para ayudarte</p>
         </div>
         <!-- Formulario con validación -->
-        <form action="/enviar-mensaje" method="POST" th:object="${contacto}">
+        <form action="/enviar-mensaje#seccion-contacto" method="POST" th:object="${contacto}">
+            <!-- Email -->
             <div class="mb-3">
                 <input class="form-control" th:field="*{email}" placeholder="Correo" type="email" />
-                <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                <ul class="text-danger" th:if="${#fields.hasErrors('email')}">
+                    <li th:each="err : ${#fields.errors('email')}" th:text="${err}"></li>
+                </ul>
             </div>
+            <!-- Nombre -->
             <div class="mb-3">
                 <input class="form-control" th:field="*{name}" placeholder="Nombre" type="text" />
-                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                <ul class="text-danger" th:if="${#fields.hasErrors('name')}">
+                    <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+                </ul>
             </div>
+            <!-- Teléfono -->
             <div class="mb-3">
                 <input class="form-control" th:field="*{phone}" placeholder="Teléfono" type="tel" />
-                <div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                <ul class="text-danger" th:if="${#fields.hasErrors('phone')}">
+                    <li th:each="err : ${#fields.errors('phone')}" th:text="${err}"></li>
+                </ul>
             </div>
+            <!-- Mensaje -->
             <div class="mb-3">
                 <textarea class="form-control" th:field="*{message}" placeholder="Escribe aquí tu consulta" rows="4"></textarea>
-                <div class="text-danger" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></div>
+                <ul class="text-danger" th:if="${#fields.hasErrors('message')}">
+                    <li th:each="err : ${#fields.errors('message')}" th:text="${err}"></li>
+                </ul>
             </div>
+            <!-- Botón -->
             <div class="mb-3">
                 <button class="btn btn-success w-100 fs-5" type="submit">Enviar Mensaje</button>
             </div>
         </form>
-
     </div>
-
 </section>
+
 
 <!-- Pie de Pagina -->
 <footer class="w-100 d-flex align-items-center justify-content-center flex-wrap">

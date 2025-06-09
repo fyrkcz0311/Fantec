@@ -265,6 +265,7 @@ body {
 #seccion-contacto {
     min-height: 500px;
     position: relative;
+    padding-bottom: 120px;
 }
 
 /* Contactos Formularios */
