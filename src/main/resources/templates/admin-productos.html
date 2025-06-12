@@ -3,34 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <title>Administrar Productos</title>
-    <link rel="stylesheet" href="/css/main.css">
+    <link href="/css/main.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
 </head>
 <body>
+<header class="container-fluid bg-dark d-flex justify-content-center">
+    <p class="text-success mb-0 p-2 fs-6">Contactanos +51 925 876 778</p>
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-light p-3" id="menu">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/productos">
+            <img src="/img/logo.png" alt="Logo" height="60" class="me-2">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link text-success" href="/productos">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link text-success" href="/todos-los-productos">Productos</a></li>
+                <li class="nav-item"><a class="nav-link text-success" href="/productos#seccion-contacto">Contacto</a></li>
+                <li class="nav-item"><a class="nav-link text-success" href="/admin/productos">Administrar Productos</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="container mt-5">
-    <h2 class="mb-4">Administrar Productos</h2>
-    <a class="btn btn-success mb-3" th:href="@{/admin/productos/nuevo}">+ Nuevo Producto</a>
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="prod : ${productos}">
-            <td th:text="${prod.nombre}"></td>
-            <td th:text="${prod.precio}"></td>
-            <td th:text="${prod.categoria.nombre}">Sin categoría</td>
-            <td>
-                <a class="btn btn-warning btn-sm" th:href="@{'/admin/productos/editar/' + ${prod.id}}">Editar</a>
-                <a class="btn btn-danger btn-sm" th:href="@{'/admin/productos/eliminar/' + ${prod.id}}" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <h2 class="text-center mb-4">Administrar Productos</h2>
+
+    <!-- Botón para nuevo producto -->
+    <div class="text-end mb-4">
+        <a class="btn btn-success" th:href="@{/admin/productos/nuevo}">+ Nuevo Producto</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 mb-4" th:each="producto : ${productos}">
+            <div class="card h-100">
+
+                <!-- Carrusel de imágenes si existen -->
+                <div th:if="${producto.imagenes != null and !#strings.isEmpty(producto.imagenes)}"
+                     th:attr="id='carouselAdmin__' + ${producto.id}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item"
+                             th:each="img, iterStat : ${producto.imagenes.split(',')}"
+                             th:classappend="${iterStat.index == 0} ? ' active'">
+                            <img class="d-block w-100" th:src="@{${img}}" alt="Imagen producto"
+                                 style="height: 200px; object-fit: contain;">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button"
+                            th:attr="data-bs-target='#carouselAdmin__' + ${producto.id}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button"
+                            th:attr="data-bs-target='#carouselAdmin__' + ${producto.id}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                </div>
+
+                <!-- Imagen por defecto si no hay imágenes -->
+                <div th:unless="${producto.imagenes != null and !#strings.isEmpty(producto.imagenes)}">
+                    <img src="https://via.placeholder.com/300x200?text=Sin+Imagen"
+                         alt="Sin imagen" class="img-fluid" style="height: 200px; object-fit: contain;"/>
+                </div>
+
+                <div class="card-body text-center">
+                    <h5 class="card-title" th:text="${producto.nombre}">Nombre</h5>
+                    <p class="card-text text-muted">
+                        <strong>Categoría:</strong> <span th:text="${producto.categoria.nombre}">Categoría</span>
+                    </p>
+                    <p class="card-text">S/. <span th:text="${producto.precio}">0.00</span></p>
+
+                    <!-- Botones de administración -->
+                    <div class="d-flex justify-content-center gap-2 mt-2">
+                        <a class="btn btn-warning btn-sm"
+                           th:href="@{'/admin/productos/editar/' + ${producto.id}}">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a class="btn btn-danger btn-sm"
+                           th:href="@{'/admin/productos/eliminar/' + ${producto.id}}"
+                           onclick="return confirm('¿Estás seguro de eliminar este producto?')">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

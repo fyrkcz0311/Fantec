@@ -107,6 +107,8 @@ public class ProductoController {
         producto.setCategoria(categoria);
 
         List<String> rutasFinales = new ArrayList<>();
+
+        // Si estamos editando, filtramos imágenes previas
         if (producto.getId() != null) {
             Producto existente = productoRepository.findById(producto.getId()).orElseThrow();
             String imagenesAnteriores = existente.getImagenes();
@@ -116,24 +118,37 @@ public class ProductoController {
                     if (imagenesAEliminar == null || !imagenesAEliminar.contains(ruta)) {
                         rutasFinales.add(ruta);
                     } else {
+                        // Eliminar archivo físico
                         Path rutaFisica = Paths.get("src/main/resources/static" + ruta);
                         Files.deleteIfExists(rutaFisica);
+
+                        Path rutaFisicaTarget = Paths.get("target/classes/static" + ruta);
+                        Files.deleteIfExists(rutaFisicaTarget);
                     }
                 }
             }
         }
 
+        // Guardar nuevas imágenes
         if (imagenesFiles != null) {
             for (MultipartFile imagen : imagenesFiles) {
                 if (!imagen.isEmpty()) {
                     String nombreArchivo = UUID.randomUUID() + "_" + imagen.getOriginalFilename();
-                    Path ruta = Paths.get("src/main/resources/static/img/" + nombreArchivo);
-                    Files.copy(imagen.getInputStream(), ruta, StandardCopyOption.REPLACE_EXISTING);
+
+                    // Guardar en src
+                    Path rutaSrc = Paths.get("src/main/resources/static/img/" + nombreArchivo);
+                    Files.copy(imagen.getInputStream(), rutaSrc, StandardCopyOption.REPLACE_EXISTING);
+
+                    // Guardar en target (para que Spring la sirva en caliente)
+                    Path rutaTarget = Paths.get("target/classes/static/img/" + nombreArchivo);
+                    Files.copy(imagen.getInputStream(), rutaTarget, StandardCopyOption.REPLACE_EXISTING);
+
                     rutasFinales.add("/img/" + nombreArchivo);
                 }
             }
         }
 
+        // Guardar rutas en el producto
         producto.setImagenes(String.join(",", rutasFinales));
         productoRepository.save(producto);
 
