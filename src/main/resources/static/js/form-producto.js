@@ -2,7 +2,7 @@ let archivosSeleccionados = [];
 
 function mostrarPreview(input) {
     const preview = document.getElementById('preview');
-    preview.innerHTML = ''; // Limpiar previews anteriores
+    preview.innerHTML = '';
     archivosSeleccionados = Array.from(input.files);
 
     archivosSeleccionados.forEach((file, index) => {
