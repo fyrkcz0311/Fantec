@@ -106,23 +106,28 @@ public class ProductoController {
             Model model
     ) throws IOException {
 
+        List<String> imagenesOriginales = new ArrayList<>();
+        List<String> imagenesParaEliminar = new ArrayList<>();
         List<String> rutasFinales = new ArrayList<>();
 
-        List<String> imagenesParaEliminar = new ArrayList<>();
+        // Recuperar imágenes anteriores si está editando
         if (producto.getId() != null) {
             Producto existente = productoRepository.findById(producto.getId()).orElseThrow();
             String imagenesAnteriores = existente.getImagenes();
 
             if (imagenesAnteriores != null && !imagenesAnteriores.isBlank()) {
-                for (String ruta : imagenesAnteriores.split(",")) {
+                imagenesOriginales = new ArrayList<>(List.of(imagenesAnteriores.split(",")));
+
+                for (String ruta : imagenesOriginales) {
                     if (imagenesAEliminar == null || !imagenesAEliminar.contains(ruta)) {
-                        rutasFinales.add(ruta);
+                        rutasFinales.add(ruta); // conservar
                     } else {
-                        imagenesParaEliminar.add(ruta);
+                        imagenesParaEliminar.add(ruta); // marcar para borrar después
                     }
                 }
             }
         }
+
         boolean noHayImagenesNuevas = imagenesFiles == null || imagenesFiles.length == 0 ||
                 (imagenesFiles.length == 1 && imagenesFiles[0].isEmpty());
 
@@ -131,6 +136,7 @@ public class ProductoController {
         }
 
         if (bindingResult.hasErrors()) {
+            producto.setImagenes(String.join(",", imagenesOriginales)); // restaurar
             model.addAttribute("categorias", categoriaRepository.findAll());
             return "form-producto";
         }
@@ -148,10 +154,8 @@ public class ProductoController {
                 if (!imagen.isEmpty()) {
                     String nombreArchivo = UUID.randomUUID() + "_" + imagen.getOriginalFilename();
 
-
                     Path rutaSrc = Paths.get("src/main/resources/static/img/" + nombreArchivo);
                     Files.copy(imagen.getInputStream(), rutaSrc, StandardCopyOption.REPLACE_EXISTING);
-
 
                     Path rutaTarget = Paths.get("target/classes/static/img/" + nombreArchivo);
                     Files.copy(imagen.getInputStream(), rutaTarget, StandardCopyOption.REPLACE_EXISTING);
@@ -161,7 +165,6 @@ public class ProductoController {
             }
         }
 
-
         Categoria categoria = categoriaRepository.findById(producto.getCategoria().getId()).orElseThrow();
         producto.setCategoria(categoria);
         producto.setImagenes(String.join(",", rutasFinales));
@@ -169,6 +172,7 @@ public class ProductoController {
 
         return "redirect:/admin/productos";
     }
+
 
     @GetMapping("/admin/productos/editar/{id}")
     public String editarProducto(@PathVariable Long id, Model model) {
