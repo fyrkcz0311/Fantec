@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +28,7 @@
                 <li class="nav-item"><a class="nav-link text-success" href="/productos">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link text-success" href="/todos-los-productos">Productos</a></li>
                 <li class="nav-item"><a class="nav-link text-success" href="/productos#seccion-contacto">Contacto</a></li>
+                <li class="nav-item"><a class="nav-link text-success" href="/admin/productos">Administrar Productos</a></li>
             </ul>
         </div>
     </div>
@@ -37,10 +38,7 @@
 <div class="container my-5 text-center">
     <h4 class="mb-3">Filtrar por Categoría</h4>
     <div class="d-flex flex-wrap justify-content-center gap-2">
-        <!-- Botón "Todos" -->
         <a class="btn btn-outline-success" th:href="@{/todos-los-productos}">Todos</a>
-
-        <!-- Botones por categoría -->
         <a th:each="cat : ${categorias}"
            class="btn btn-outline-success"
            th:href="@{/todos-los-productos/categoria/{id}(id=${cat.id})}"
@@ -53,7 +51,10 @@
     <div class="row">
         <div class="col-md-3 mb-4" th:each="producto : ${productos}" data-aos="fade-up" data-aos-delay="100">
             <div class="card h-100">
-                <div th:attr="id='carouselProducto__' + ${producto.id}" class="carousel slide" data-bs-ride="carousel">
+
+                <!-- Carrusel si hay imágenes -->
+                <div th:if="${producto.imagenes != null and !#strings.isEmpty(producto.imagenes)}"
+                     th:attr="id='carouselProducto__' + ${producto.id}" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item"
                              th:each="img, iterStat : ${producto.imagenes.split(',')}"
@@ -72,6 +73,13 @@
                         <span class="visually-hidden">Siguiente</span>
                     </button>
                 </div>
+
+                <!-- Imagen por defecto -->
+                <div th:unless="${producto.imagenes != null and !#strings.isEmpty(producto.imagenes)}">
+                    <img src="https://via.placeholder.com/300x200?text=Sin+Imagen"
+                         alt="Sin imagen" class="img-fluid" style="height: 200px; object-fit: contain;" />
+                </div>
+
                 <div class="card-body text-center">
                     <h5 class="card-title" th:text="${producto.nombre}">Nombre</h5>
                     <p class="card-text text-muted">
@@ -100,14 +108,16 @@
                 <div class="modal-body">
                     <p><strong th:text="${producto.nombre}"></strong></p>
                     <ul>
-                        <li th:each="car : ${producto.caracteristicas.split(',')}" th:text="${car}">característica</li>
+                        <li th:each="car : ${producto.caracteristicas != null ? producto.caracteristicas.split(',') : {}}"
+                            th:text="${car}">característica</li>
                     </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="bi bi-x"></i> Cerrar
                     </button>
-                    <a th:href="'https://wa.me/51925876778?text=Hola,%20deseo%20adquirir%20el%20producto:%20' + ${#strings.replace(producto.nombre, ' ', '%20')}" target="_blank">
+                    <a th:href="'https://wa.me/51925876778?text=Hola,%20deseo%20adquirir%20el%20producto:%20' + ${#strings.replace(producto.nombre, ' ', '%20')}"
+                       target="_blank">
                         <button type="button" class="btn btn-success">
                             <i class="bi bi-cart-plus"></i> Confirmar
                         </button>

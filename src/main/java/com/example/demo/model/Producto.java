@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString (exclude = "categoria")
 public class Producto {
 
     @Id
