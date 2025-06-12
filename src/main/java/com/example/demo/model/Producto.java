@@ -32,6 +32,7 @@ public class Producto {
     private String imagenes;
 
     @Size(max = 1000, message = "Las características no deben exceder 1000 caracteres.")
+    @NotBlank(message = "Las características son obligatorias.")
     private String caracteristicas;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

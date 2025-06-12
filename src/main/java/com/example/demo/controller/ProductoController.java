@@ -135,6 +135,16 @@ public class ProductoController {
             bindingResult.rejectValue("imagenes", "error.producto", "Debe subir al menos una imagen.");
         }
 
+        if (producto.getCaracteristicas() == null || producto.getCaracteristicas().trim().isEmpty()) {
+            bindingResult.rejectValue("caracteristicas", "error.producto", "Debe ingresar al menos una característica.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            producto.setImagenes(String.join(",", imagenesOriginales)); // restaurar
+            model.addAttribute("categorias", categoriaRepository.findAll());
+            return "form-producto";
+        }
+
         if (bindingResult.hasErrors()) {
             producto.setImagenes(String.join(",", imagenesOriginales)); // restaurar
             model.addAttribute("categorias", categoriaRepository.findAll());
