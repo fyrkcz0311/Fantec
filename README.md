@@ -1,6 +1,6 @@
 # Proyecto Web Informativo – Fantec
 
-Este proyecto es una página web informativa y administrativa para la tienda de tecnología **FANTEC**, desarrollada con **Spring Boot**, **Thymeleaf**, **MySQL** y **Bootstrap**. Permite mostrar y gestionar productos, filtrarlos por categoría, subir imágenes múltiples por producto y gestionar mensajes de contacto con validaciones completas.
+Este proyecto es una página web informativa y administrativa para la tienda de tecnología **FANTEC**, desarrollada con **Spring Boot**, **Thymeleaf**, **MySQL** y **Bootstrap**. Permite mostrar y gestionar productos, filtrarlos por categoría, subir imágenes múltiples por producto y gestionar mensajes de contacto, todo con validaciones completas.
 
 ---
 
@@ -10,6 +10,7 @@ Este proyecto es una página web informativa y administrativa para la tienda de 
 - Permitir filtrado por categoría.
 - Registrar mensajes de contacto con validación de campos.
 - Administrar productos (crear, editar, eliminar) con imágenes múltiples.
+- Validar campos del formulario de productos y contacto.
 - Mantener una estructura clara basada en el patrón MVC.
 
 ---
@@ -47,7 +48,7 @@ Este proyecto es una página web informativa y administrativa para la tienda de 
 - `Producto`:
     - Atributos: `id`, `nombre`, `precio`, `imagenes`, `caracteristicas`.
     - Relación: `@ManyToOne` con `Categoria`.
-    - Soporta múltiples imágenes con subida dinámica y validación obligatoria.
+    - Validaciones: `@NotBlank`, `@NotNull`, validación de imágenes y características obligatorias.
 
 - `Categoria`:
     - Atributos: `id`, `nombre`.
@@ -62,9 +63,14 @@ Este proyecto es una página web informativa y administrativa para la tienda de 
 ## ✅ Validaciones implementadas
 
 - Todos los formularios incluyen validaciones del lado servidor con `@Valid`.
-- Los campos vacíos, incorrectos o sin imagen bloquean el guardado.
-- Se valida que al menos una imagen esté presente al registrar o editar productos.
-- Imágenes marcadas para eliminar **solo se borran si la validación es exitosa**.
+- El formulario de productos valida:
+    - Nombre y precio obligatorios.
+    - Al menos una imagen subida.
+    - Selección de categoría.
+- El formulario de contacto valida:
+    - Correo electrónico válido.
+    - Nombre, teléfono y mensaje obligatorios y bien formateados.
+- Imágenes marcadas para eliminar solo se borran si la validación es exitosa.
 
 ---
 
