@@ -2,10 +2,11 @@ let archivosSeleccionados = [];
 
 function mostrarPreview(input) {
     const preview = document.getElementById('preview');
-    preview.innerHTML = '';
-    archivosSeleccionados = Array.from(input.files);
+    const nuevosArchivos = Array.from(input.files);
 
-    archivosSeleccionados.forEach((file, index) => {
+    nuevosArchivos.forEach(file => {
+        archivosSeleccionados.push(file);
+
         const reader = new FileReader();
         reader.onload = e => {
             const container = document.createElement('div');
@@ -14,8 +15,8 @@ function mostrarPreview(input) {
 
             const img = document.createElement('img');
             img.src = e.target.result;
-            img.style.height = '100px';
             img.className = 'img-thumbnail';
+            img.style.height = '100px';
 
             const btn = document.createElement('button');
             btn.type = 'button';
@@ -25,7 +26,8 @@ function mostrarPreview(input) {
             btn.style.right = '-8px';
             btn.style.padding = '2px 6px';
             btn.onclick = function () {
-                archivosSeleccionados.splice(index, 1);
+                const index = archivosSeleccionados.indexOf(file);
+                if (index > -1) archivosSeleccionados.splice(index, 1);
                 actualizarInputFiles(input);
                 container.remove();
             };
@@ -36,6 +38,10 @@ function mostrarPreview(input) {
         };
         reader.readAsDataURL(file);
     });
+
+    // Limpia el input real para que permita seleccionar el mismo archivo de nuevo si se desea
+    input.value = '';
+    actualizarInputFiles(input);
 }
 
 function actualizarInputFiles(input) {

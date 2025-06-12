@@ -5,9 +5,11 @@ import com.example.demo.model.Contacto;
 import com.example.demo.model.Producto;
 import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.ProductoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -97,18 +99,16 @@ public class ProductoController {
 
     @PostMapping("/admin/productos/guardar")
     public String guardarProducto(
-            @ModelAttribute Producto producto,
+            @Valid @ModelAttribute Producto producto,
+            BindingResult bindingResult,
             @RequestParam("imagenesFiles") MultipartFile[] imagenesFiles,
-            @RequestParam(value = "imagenesAEliminar", required = false) List<String> imagenesAEliminar
+            @RequestParam(value = "imagenesAEliminar", required = false) List<String> imagenesAEliminar,
+            Model model
     ) throws IOException {
-
-        Long categoriaId = producto.getCategoria().getId();
-        Categoria categoria = categoriaRepository.findById(categoriaId).orElseThrow();
-        producto.setCategoria(categoria);
 
         List<String> rutasFinales = new ArrayList<>();
 
-        // Si estamos editando, filtramos imágenes previas
+        List<String> imagenesParaEliminar = new ArrayList<>();
         if (producto.getId() != null) {
             Producto existente = productoRepository.findById(producto.getId()).orElseThrow();
             String imagenesAnteriores = existente.getImagenes();
@@ -118,28 +118,41 @@ public class ProductoController {
                     if (imagenesAEliminar == null || !imagenesAEliminar.contains(ruta)) {
                         rutasFinales.add(ruta);
                     } else {
-                        // Eliminar archivo físico
-                        Path rutaFisica = Paths.get("src/main/resources/static" + ruta);
-                        Files.deleteIfExists(rutaFisica);
-
-                        Path rutaFisicaTarget = Paths.get("target/classes/static" + ruta);
-                        Files.deleteIfExists(rutaFisicaTarget);
+                        imagenesParaEliminar.add(ruta);
                     }
                 }
             }
         }
+        boolean noHayImagenesNuevas = imagenesFiles == null || imagenesFiles.length == 0 ||
+                (imagenesFiles.length == 1 && imagenesFiles[0].isEmpty());
 
-        // Guardar nuevas imágenes
+        if (rutasFinales.isEmpty() && noHayImagenesNuevas) {
+            bindingResult.rejectValue("imagenes", "error.producto", "Debe subir al menos una imagen.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categorias", categoriaRepository.findAll());
+            return "form-producto";
+        }
+
+        for (String ruta : imagenesParaEliminar) {
+            Path rutaFisica = Paths.get("src/main/resources/static" + ruta);
+            Files.deleteIfExists(rutaFisica);
+
+            Path rutaFisicaTarget = Paths.get("target/classes/static" + ruta);
+            Files.deleteIfExists(rutaFisicaTarget);
+        }
+
         if (imagenesFiles != null) {
             for (MultipartFile imagen : imagenesFiles) {
                 if (!imagen.isEmpty()) {
                     String nombreArchivo = UUID.randomUUID() + "_" + imagen.getOriginalFilename();
 
-                    // Guardar en src
+
                     Path rutaSrc = Paths.get("src/main/resources/static/img/" + nombreArchivo);
                     Files.copy(imagen.getInputStream(), rutaSrc, StandardCopyOption.REPLACE_EXISTING);
 
-                    // Guardar en target (para que Spring la sirva en caliente)
+
                     Path rutaTarget = Paths.get("target/classes/static/img/" + nombreArchivo);
                     Files.copy(imagen.getInputStream(), rutaTarget, StandardCopyOption.REPLACE_EXISTING);
 
@@ -148,7 +161,9 @@ public class ProductoController {
             }
         }
 
-        // Guardar rutas en el producto
+
+        Categoria categoria = categoriaRepository.findById(producto.getCategoria().getId()).orElseThrow();
+        producto.setCategoria(categoria);
         producto.setImagenes(String.join(",", rutasFinales));
         productoRepository.save(producto);
 
