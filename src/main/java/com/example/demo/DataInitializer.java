@@ -1,9 +1,9 @@
 package com.example.demo;
 
-import com.example.demo.model.Categoria;
-import com.example.demo.model.Producto;
+import com.example.demo.model.*;
 import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.ProductoRepository;
+import com.example.demo.repository.RolRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +15,30 @@ import java.util.List;
 public class DataInitializer {
 
     @Bean
-    public CommandLineRunner initData(ProductoRepository productoRepository, CategoriaRepository categoriaRepository) {
+    public CommandLineRunner initData(ProductoRepository productoRepository,
+                                      CategoriaRepository categoriaRepository,
+                                      RolRepository rolRepository) {
         return args -> {
+
+            // ✅ Crear roles si no existen
+            if (rolRepository.count() == 0) {
+                Rol rolUser = new Rol();
+                rolUser.setNombre(RolNombre.ROLE_USER);
+                rolRepository.save(rolUser);
+
+                Rol rolAdmin = new Rol();
+                rolAdmin.setNombre(RolNombre.ROLE_ADMIN);
+                rolRepository.save(rolAdmin);
+
+                System.out.println("✅ Roles creados correctamente.");
+            }
+
+            // ✅ Crear categorías y productos si no existen
             if (productoRepository.count() == 0) {
-                // Crear categorías
                 Categoria audifonos = new Categoria(null, "Audífonos", null);
                 Categoria cargadores = new Categoria(null, "Cargadores", null);
 
                 categoriaRepository.saveAll(List.of(audifonos, cargadores));
-
 
                 productoRepository.saveAll(List.of(
                         new Producto(null, "Audífonos A9 Plus", new BigDecimal("45.00"),
@@ -66,6 +81,8 @@ public class DataInitializer {
                                 "Conector 3.5mm, Sonido HD, Graves potentes, Diseño ergonómico",
                                 audifonos)
                 ));
+
+                System.out.println("✅ Productos y categorías creados correctamente.");
             }
         };
     }
