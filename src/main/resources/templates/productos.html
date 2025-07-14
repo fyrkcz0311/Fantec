@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
@@ -21,17 +21,19 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light p-3" id="menu">
     <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="#">
+        <a class="navbar-brand d-flex align-items-center" href="/">
             <img src="/img/logo.png" alt="Logo" height="60" class="me-2">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-success" href="#">Inicio</a>
+                    <a class="nav-link text-success" href="/productos">Inicio</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-success" href="/todos-los-productos">Productos</a>
@@ -39,11 +41,32 @@
                 <li class="nav-item">
                     <a class="nav-link text-success" href="#seccion-contacto">Contacto</a>
                 </li>
-                <li class="nav-item"><a class="nav-link text-success" href="/admin/productos">Administrar Productos</a></li>
+
+                <!-- Visible solo si está autenticado -->
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link text-success" href="/admin/productos">Administrar Productos</a>
+                </li>
+
+                <!-- Mostrar usuario logueado -->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link text-success disabled">Hola, <span sec:authentication="name">Usuario</span></a>
+                </li>
+
+
+                <!-- Botón logout -->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link text-danger" href="/logout">Cerrar sesión</a>
+                </li>
+
+                <!-- Mostrar solo si NO está logueado -->
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link text-success" href="/login">Iniciar Sesión</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
 
 <!-- Carrusel principal de imágenes -->
 <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
