@@ -38,7 +38,7 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    // 🔑 LOGIN
+    //LOGIN
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         try {
@@ -54,7 +54,7 @@ public class AuthController {
         }
     }
 
-    // 📝 REGISTRO
+    //REGISTRO
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AuthRequest request) {
         if (usuarioRepo.findByUsername(request.getUsername()).isPresent()) {

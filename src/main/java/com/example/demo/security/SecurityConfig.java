@@ -28,13 +28,21 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/register", "/login").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Rutas públicas
+                        .requestMatchers("/auth/**", "/register", "/login", "/css/**", "/js/**","/form-register", "/img/**").permitAll()
+
+                        // Solo para ADMIN
+                        .requestMatchers("/admin/productos").hasRole("ADMIN")
+
+                        // Accesibles para USER y ADMIN
+                        .requestMatchers("/", "/productos", "/todos-los-productos", "/enviar-mensaje", "/mensaje-enviado").hasAnyRole("USER", "ADMIN")
+
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // usa tu login.html
-                        .defaultSuccessUrl("/productos", true)
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/productos", true) // puedes cambiar esto luego con redirección por rol
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -45,6 +53,7 @@ public class SecurityConfig {
                 .userDetailsService(usuarioService)
                 .build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

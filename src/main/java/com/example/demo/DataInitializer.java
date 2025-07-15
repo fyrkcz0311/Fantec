@@ -4,12 +4,15 @@ import com.example.demo.model.*;
 import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.ProductoRepository;
 import com.example.demo.repository.RolRepository;
+import com.example.demo.repository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 public class DataInitializer {
@@ -17,7 +20,8 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initData(ProductoRepository productoRepository,
                                       CategoriaRepository categoriaRepository,
-                                      RolRepository rolRepository) {
+                                      RolRepository rolRepository,
+                                      UsuarioRepository usuarioRepository) {
         return args -> {
 
             // ✅ Crear roles si no existen
@@ -31,6 +35,18 @@ public class DataInitializer {
                 rolRepository.save(rolAdmin);
 
                 System.out.println("✅ Roles creados correctamente.");
+            }
+
+            // ✅ Crear usuario admin si no existe
+            if (usuarioRepository.findByUsername("admin").isEmpty()) {
+                Usuario admin = new Usuario();
+                admin.setUsername("admin");
+                admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
+                Rol rolAdmin = rolRepository.findByNombre(RolNombre.ROLE_ADMIN)
+                        .orElseThrow(() -> new RuntimeException("ROL_ADMIN no encontrado"));
+                admin.setRoles(Set.of(rolAdmin));
+                usuarioRepository.save(admin);
+                System.out.println("✅ Usuario administrador creado: admin/admin");
             }
 
             // ✅ Crear categorías y productos si no existen

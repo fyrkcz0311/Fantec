@@ -8,11 +8,12 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login"; // apunta a login.html
+        return "login";
     }
 
     @GetMapping("/register")
     public String registerPage() {
-        return "register"; // apunta a register.html
+        return "register";
     }
+
 }
