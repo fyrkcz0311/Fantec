@@ -5,11 +5,9 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.*;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
@@ -17,10 +15,12 @@ public class SecurityConfig {
 
     private final UsuarioService usuarioService;
     private final JwtFilter jwtFilter;
+    private final CustomSuccessHandler successHandler;
 
-    public SecurityConfig(UsuarioService usuarioService, JwtFilter jwtFilter) {
+    public SecurityConfig(UsuarioService usuarioService, JwtFilter jwtFilter, CustomSuccessHandler successHandler) {
         this.usuarioService = usuarioService;
         this.jwtFilter = jwtFilter;
+        this.successHandler = successHandler;
     }
 
     @Bean
@@ -28,21 +28,14 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas públicas
-                        .requestMatchers("/auth/**", "/register", "/login", "/css/**", "/js/**","/form-register", "/img/**").permitAll()
-
-                        // Solo para ADMIN
+                        .requestMatchers("/auth/**", "/register", "/login", "/form-register", "/css/**", "/js/**", "/img/**").permitAll()
                         .requestMatchers("/admin/productos").hasRole("ADMIN")
-
-                        // Accesibles para USER y ADMIN
                         .requestMatchers("/", "/productos", "/todos-los-productos", "/enviar-mensaje", "/mensaje-enviado").hasAnyRole("USER", "ADMIN")
-
-
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/productos", true) // puedes cambiar esto luego con redirección por rol
+                        .successHandler(successHandler)  // ✅ REDIRECCIÓN POR ROL
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -53,7 +46,6 @@ public class SecurityConfig {
                 .userDetailsService(usuarioService)
                 .build();
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
