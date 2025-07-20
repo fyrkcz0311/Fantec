@@ -21,7 +21,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
         for (GrantedAuthority auth : authentication.getAuthorities()) {
             if (auth.getAuthority().equals("ROLE_ADMIN")) {
-                redirectUrl = "/admin/productos";
+                redirectUrl = "/admin/dashboard";
                 break;
             }
         }

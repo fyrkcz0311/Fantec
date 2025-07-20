@@ -14,12 +14,11 @@ import org.springframework.security.web.*;
 public class SecurityConfig {
 
     private final UsuarioService usuarioService;
-    private final JwtFilter jwtFilter;
     private final CustomSuccessHandler successHandler;
 
-    public SecurityConfig(UsuarioService usuarioService, JwtFilter jwtFilter, CustomSuccessHandler successHandler) {
+    public SecurityConfig(UsuarioService usuarioService,  CustomSuccessHandler successHandler) {
         this.usuarioService = usuarioService;
-        this.jwtFilter = jwtFilter;
+        
         this.successHandler = successHandler;
     }
 
