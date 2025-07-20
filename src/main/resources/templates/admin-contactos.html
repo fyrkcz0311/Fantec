@@ -17,9 +17,9 @@
     </thead>
     <tbody>
     <tr th:each="contacto : ${contactos}">
-      <td th:text="${contacto.nombre}"></td>
+      <td th:text="${contacto.name}"></td>
       <td th:text="${contacto.email}"></td>
-      <td th:text="${contacto.mensaje}"></td>
+      <td th:text="${contacto.message}"></td>
     </tr>
     </tbody>
   </table>
