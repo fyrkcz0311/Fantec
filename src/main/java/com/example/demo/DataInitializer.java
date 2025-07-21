@@ -23,37 +23,38 @@ public class DataInitializer {
                                       RolRepository rolRepository,
                                       UsuarioRepository usuarioRepository) {
         return args -> {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-            // ✅ Crear roles si no existen
+            // Crear roles si no existen
             if (rolRepository.count() == 0) {
-                Rol rolUser = new Rol();
-                rolUser.setNombre(RolNombre.ROLE_USER);
-                rolRepository.save(rolUser);
-
-                Rol rolAdmin = new Rol();
-                rolAdmin.setNombre(RolNombre.ROLE_ADMIN);
-                rolRepository.save(rolAdmin);
-
-                System.out.println("✅ Roles creados correctamente.");
+                rolRepository.saveAll(List.of(
+                        new Rol(null, RolNombre.ROLE_USER),
+                        new Rol(null, RolNombre.ROLE_ADMIN)
+                ));
+                System.out.println("🛡️ Roles creados: USER y ADMIN.");
             }
 
-            // ✅ Crear usuario admin si no existe
+            // Crear usuario administrador por defecto
             if (usuarioRepository.findByUsername("admin").isEmpty()) {
+                Rol rolAdmin = rolRepository.findByNombre(RolNombre.ROLE_ADMIN)
+                        .orElseThrow(() -> new RuntimeException("Rol ADMIN no encontrado"));
+
                 Usuario admin = new Usuario();
                 admin.setUsername("admin");
-                admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
-                Rol rolAdmin = rolRepository.findByNombre(RolNombre.ROLE_ADMIN)
-                        .orElseThrow(() -> new RuntimeException("ROL_ADMIN no encontrado"));
+                admin.setPassword(encoder.encode("admin"));
+                admin.setNombre("Admin");
+                admin.setApellido("Principal");
+                admin.setEmail("admin@admin.com");
                 admin.setRoles(Set.of(rolAdmin));
                 usuarioRepository.save(admin);
-                System.out.println("✅ Usuario administrador creado: admin/admin");
+
+                System.out.println("👤 Usuario ADMIN creado (admin/admin)");
             }
 
-            // ✅ Crear categorías y productos si no existen
+            // Crear categorías y productos
             if (productoRepository.count() == 0) {
                 Categoria audifonos = new Categoria(null, "Audífonos", null);
                 Categoria cargadores = new Categoria(null, "Cargadores", null);
-
                 categoriaRepository.saveAll(List.of(audifonos, cargadores));
 
                 productoRepository.saveAll(List.of(
@@ -98,7 +99,7 @@ public class DataInitializer {
                                 audifonos)
                 ));
 
-                System.out.println("✅ Productos y categorías creados correctamente.");
+                System.out.println("📦 Productos y categorías inicializados.");
             }
         };
     }
