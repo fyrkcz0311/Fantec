@@ -1,122 +1,154 @@
-# Proyecto Web Informativo – Fantec
+# FANTEC - Sistema Web de Venta de Tecnología
 
-Este proyecto es una página web informativa y administrativa para la tienda de tecnología **FANTEC**, desarrollada con **Spring Boot**, **Thymeleaf**, **MySQL** y **Bootstrap**. Permite mostrar y gestionar productos, filtrarlos por categoría, subir imágenes múltiples por producto y gestionar mensajes de contacto, todo con validaciones completas.
+Este proyecto es una aplicación web desarrollada con **Spring Boot**, **Thymeleaf**, **MySQL**, y **Spring Security** para gestionar productos tecnológicos y usuarios con distintos roles de acceso.
+
+## 🔐 Seguridad del Sistema
+
+El sistema utiliza **Spring Security** para la autenticación y autorización de usuarios:
+
+- Acceso público a rutas como `/productos`, `/contacto`, `/enviar-mensaje`.
+- Rutas protegidas bajo `/admin/**` accesibles solo para usuarios con rol `ADMIN`.
+- Formulario de login y logout seguro.
+- Protección contra ataques CSRF habilitada.
+
+### 🛡️ Configuración de Seguridad
+
+Se define en `SecurityConfig.java` usando un `SecurityFilterChain`:
+
+```java
+.authorizeHttpRequests(auth -> auth
+    .requestMatchers("/", "/productos", "/contacto", "/enviar-mensaje", "/css/**", "/img/**").permitAll()
+    .requestMatchers("/admin/**").hasRole("ADMIN")
+    .anyRequest().authenticated()
+)
+.formLogin(form -> form
+    .loginPage("/login").permitAll()
+)
+.logout(logout -> logout
+    .logoutUrl("/logout")
+    .logoutSuccessUrl("/productos")
+)
+.csrf(csrf -> csrf.enable());
+```
+
+## 📁 Estructura del Proyecto
+
+La estructura del proyecto sigue un diseño modular por capas, agrupando componentes por responsabilidades:
+
+```
+src/main/java/com/example/demo/
+├── controller/              # Controladores para manejar las rutas y vistas
+│   ├── AdminController
+│   ├── CategoriaController
+│   ├── ContactoAdminController
+│   ├── ContactoController
+│   ├── FormAuthController
+│   ├── LoginController
+│   ├── ProductoController
+│   ├── TestController
+│   └── UsuarioController
+│
+├── dto/                     # Objetos de transferencia de datos
+│   └── AuthRequest.java
+│
+├── model/                   # Entidades del sistema (mapeadas a la base de datos)
+│   ├── Categoria.java
+│   ├── Contacto.java
+│   ├── Producto.java
+│   ├── Rol.java
+│   ├── RolNombre.java
+│   └── Usuario.java
+│
+├── repository/              # Interfaces para acceso a datos con Spring Data JPA
+│   ├── CategoriaRepository.java
+│   ├── ContactoRepository.java
+│   ├── ProductoRepository.java
+│   ├── RolRepository.java
+│   └── UsuarioRepository.java
+│
+├── security/                # Configuración de seguridad
+│   ├── CustomAuthenticationEntryPoint.java
+│   ├── CustomSuccessHandler.java
+│   ├── NoCacheFilter.java
+│   ├── SecurityConfig.java
+│   └── UsuarioService.java
+│
+├── DataInitializer.java     # Carga inicial de datos al iniciar el proyecto
+└── DemoApplication.java     # Clase principal del proyecto (Spring Boot)
+
+├── templates/
+│   ├── productos.html
+│   ├── mensaje-enviado.html
+│   └── admin/...
+└── static/
+    ├── css/
+    ├── js/
+    └── img/
+```
+
+## 📦 Base de Datos
+
+- MySQL
+- Archivos `.sql` para inicializar tablas y datos disponibles en `/resources/db/`.
+- Entidades están anotadas con JPA y validadas con `jakarta.validation`.
+
+## 🛠️ Cómo ejecutar
+
+1. Clonar el Proyecto
+    ```bash
+    https://github.com/fyrkcz0311/Fantec.git
+    ```
+2. Crear la base de datos `fantec` en MySQL
+3. Configurar el `application.properties`:
+    ```properties
+    spring.datasource.url=jdbc:mysql://localhost:3306/fantec
+    spring.datasource.username=root
+    spring.datasource.password=tu_clave
+    ```
+4. Ejecutar el proyecto desde tu IDE o con:
+    ```bash
+    ./mvnw spring-boot:run
+    ```
+5. Acceder desde el navegador a:
+    ```bash
+    http://localhost:8080
+    ```
+   ## 🔒 Explicación Adicional de Seguridad
+
+- `SecurityConfig.java`: Configura las rutas públicas (`/login`, `/form-register`, `/css/**`, etc.) y restringe las rutas privadas por roles (`/admin/**` requiere ADMIN).
+- `UsuarioService.java`: Carga usuarios desde la base de datos implementando `UserDetailsService`.
+- `CustomSuccessHandler.java`: Redirige dinámicamente a los usuarios según su rol.
+- `NoCacheFilter.java`: Previene el almacenamiento en caché de páginas tras cerrar sesión.
+- `CustomAuthenticationEntryPoint.java`: Personaliza las respuestas de error para accesos no autorizados.
+
+## ✅ Validaciones de Seguridad Implementadas
+
+- Protección contra CSRF.
+- Validación en todos los Formularios usando `@Valid`
+- Contraseñas encriptadas con BCrypt en `UsuarioController`.
 
 ---
 
-## 🎯 Objetivo
 
-- Mostrar productos destacados y catálogo completo.
-- Permitir filtrado por categoría.
-- Registrar mensajes de contacto con validación de campos.
-- Administrar productos (crear, editar, eliminar) con imágenes múltiples.
-- Validar campos del formulario de productos y contacto.
-- Mantener una estructura clara basada en el patrón MVC.
 
----
+## 💡 Funcionalidades
 
-## 🧱 Tecnologías utilizadas
+- Registro y login de usuarios
+- Panel de administrador (gestión de productos, usuarios, categorias y leer mensajes de contacto)
+- Contacto con validación y persistencia
+- Logout seguro
+- Interfaz responsiva con Bootstrap
 
-- **Java 17**
-- **Spring Boot 3**
-- **Spring Data JPA**
-- **Thymeleaf**
-- **Bootstrap 5**
-- **MySQL**
-- **Lombok**
-- **Jakarta Bean Validation**
+## 📬 Contacto
+
+Formulario accesible en `/productos#seccion-contacto`. Los datos ingresados se validan y se almacenan en la base de datos.
+
+## 🧾 Créditos
+
+Desarrollado por: **[Fernando Castro]**  
+Frameworks usados: Spring Boot, Spring Security, Thymeleaf, Bootstrap 5
 
 ---
 
-## 🔗 Rutas de la aplicación
 
-| Ruta                                      | Función                                                                 |
-|-------------------------------------------|-------------------------------------------------------------------------|
-| `/productos`                              | Página de inicio con 3 productos destacados                            |
-| `/todos-los-productos`                    | Catálogo completo con carrusel de imágenes y botón "Comprar"           |
-| `/todos-los-productos/categoria/{id}`     | Filtra productos por ID de categoría                                   |
-| `/admin/productos`                        | Vista de administración con tarjetas, botones "Editar" y "Eliminar"    |
-| `/admin/productos/nuevo`                  | Formulario para registrar nuevos productos                             |
-| `/admin/productos/editar/{id}`            | Formulario para editar un producto existente                           |
-| `/admin/productos/eliminar/{id}`          | Elimina un producto y sus imágenes del sistema                         |
-| `/enviar-mensaje`                         | Procesa el formulario de contacto con validaciones                     |
 
----
-
-## 🧩 Estructura de entidades y relaciones
-
-- `Producto`:
-    - Atributos: `id`, `nombre`, `precio`, `imagenes`, `caracteristicas`.
-    - Relación: `@ManyToOne` con `Categoria`.
-    - Validaciones: `@NotBlank`, `@NotNull`, validación de imágenes y características obligatorias.
-
-- `Categoria`:
-    - Atributos: `id`, `nombre`.
-    - Relación: `@OneToMany` con `Producto`.
-
-- `Contacto`:
-    - Atributos: `email`, `name`, `phone`, `message`.
-    - Validaciones: `@Email`, `@NotBlank`, `@Pattern`, `@Size`.
-
----
-
-## ✅ Validaciones implementadas
-
-- Todos los formularios incluyen validaciones del lado servidor con `@Valid`.
-- El formulario de productos valida:
-    - Nombre y precio obligatorios.
-    - Al menos una imagen subida.
-    - Selección de categoría.
-- El formulario de contacto valida:
-    - Correo electrónico válido.
-    - Nombre, teléfono y mensaje obligatorios y bien formateados.
-- Imágenes marcadas para eliminar solo se borran si la validación es exitosa.
-
----
-
-## 📷 Capturas requeridas para entrega
-
-1. Página `/productos` con productos destacados.
-2. Página `/todos-los-productos` mostrando todos los productos.
-3. Filtro de categorías funcionando correctamente.
-4. Modal o detalle del producto visible.
-5. Formulario de contacto mostrando errores si está vacío.
-6. Vista `mensaje-enviado.html` con nombre del remitente.
-7. Visualización de la base de datos con registros en `producto` y `contacto`.
-8. Vista de administración mostrando tarjetas con imagen, botones y edición funcional.
-
----
-
-## ⚙ Cómo ejecutar el proyecto
-
-1. Crea la base de datos:
-   ```sql
-   CREATE DATABASE Fantec;
-   ```
-
-2. Configura tu archivo `application.properties`:
-
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/Fantec
-   spring.datasource.username=root
-   spring.datasource.password=TU_CONTRASEÑA
-   spring.jpa.hibernate.ddl-auto=update
-   spring.servlet.multipart.max-file-size=5MB
-   spring.servlet.multipart.max-request-size=20MB
-   ```
-
-3. Ejecuta desde tu IDE o terminal:
-   ```bash
-   mvn spring-boot:run
-   ```
-
-4. Abre en el navegador:
-   ```
-   http://localhost:8080/productos
-   ```
-
----
-
-## 👨‍💻 Autor
-
-- **Fernando Daniel Castro Zelada**
