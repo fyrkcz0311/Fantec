@@ -53,8 +53,11 @@
         <td th:text="${usuario.nombre}"></td>
         <td th:text="${usuario.apellido}"></td>
         <td th:text="${usuario.email}"></td>
-        <td>
-          <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre + ' '}"></span>
+        <td class="text-center">
+  <span th:each="rol : ${usuario.roles}"
+        th:text="${rol.nombre.name() == 'ROLE_ADMIN' ? 'Administrador' : 'Usuario'}"
+        th:classappend="${rol.nombre.name() == 'ROLE_ADMIN'} ? 'badge bg-danger' : 'badge bg-primary'">
+  </span>
         </td>
         <td>
           <a th:href="@{'/admin/usuarios/editar/' + ${usuario.id}}" class="btn btn-sm btn-primary me-1">
