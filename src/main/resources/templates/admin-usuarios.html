@@ -2,39 +2,74 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Gestión de Usuarios</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="/img/logo.png" alt="Logo" width="40" class="me-2">
+    </a>
+    <div class="d-flex text-white align-items-center">
+      <span class="me-3">Bienvenido, <strong th:text="${username}">admin</strong></span>
+      <form th:action="@{/logout}" method="post" class="mb-0">
+        <button type="submit" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+        </button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<!-- CONTENIDO -->
 <div class="container mt-5">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Lista de Usuarios</h2>
-    <a href="/admin/usuarios/nuevo" class="btn btn-success">Agregar Usuario</a>
+    <a href="/admin/usuarios/nuevo" class="btn btn-success">
+      <i class="bi bi-plus-circle"></i> Agregar Usuario
+    </a>
   </div>
 
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre de usuario</th>
-      <th>Rol</th>
-      <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="usuario : ${usuarios}">
-      <td th:text="${usuario.id}"></td>
-      <td th:text="${usuario.username}"></td>
-      <td>
-        <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre} + ' '"></span>
-      </td>
-      <td>
-        <a th:href="@{'/admin/usuarios/editar/' + ${usuario.id}}" class="btn btn-sm btn-primary">Editar</a>
-        <a th:href="@{'/admin/usuarios/eliminar/' + ${usuario.id}}" class="btn btn-sm btn-danger"
-           onclick="return confirm('¿Estás seguro de eliminar este usuario?')">Eliminar</a>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+      <thead class="table-dark text-center">
+      <tr>
+        <th>ID</th>
+        <th>Nombre de usuario</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="usuario : ${usuarios}" class="text-center">
+        <td th:text="${usuario.id}"></td>
+        <td th:text="${usuario.username}"></td>
+        <td>
+          <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre + ' '}"></span>
+        </td>
+        <td>
+          <a th:href="@{'/admin/usuarios/editar/' + ${usuario.id}}" class="btn btn-sm btn-primary me-1">
+            <i class="bi bi-pencil-square"></i> Editar
+          </a>
+          <a th:href="@{'/admin/usuarios/eliminar/' + ${usuario.id}}" class="btn btn-sm btn-danger"
+             onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+            <i class="bi bi-trash"></i> Eliminar
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <a href="/admin/dashboard" class="btn btn-secondary mt-3">
+    <i class="bi bi-arrow-left"></i> Volver al Dashboard
+  </a>
 </div>
+
 </body>
 </html>

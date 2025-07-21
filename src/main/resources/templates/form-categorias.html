@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${categoria.id == null ? 'Nueva Categoría' : 'Editar Categoría'}">Formulario Categoría</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="/img/logo.png" alt="Logo" width="40" class="me-2">
+        </a>
+        <div class="d-flex ms-auto align-items-center text-white">
+            <span class="me-3">Bienvenido, <strong th:text="${username}">admin</strong></span>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-outline-light btn-sm" type="submit">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- FORMULARIO -->
+<div class="container mt-5">
+    <h2 th:text="${categoria.id == null ? 'Nueva Categoría' : 'Editar Categoría'}" class="mb-4"></h2>
+
+    <form th:action="@{/admin/categorias/guardar}" th:object="${categoria}" method="post" class="needs-validation" novalidate>
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre de Categoría</label>
+            <input type="text" th:field="*{nombre}" id="nombre" class="form-control" required>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Guardar
+            </button>
+            <a href="/admin/categorias" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Script de validación Bootstrap -->
+<script>
+    (() => {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+
+</body>
+</html>

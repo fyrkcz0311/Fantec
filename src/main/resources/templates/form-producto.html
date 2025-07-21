@@ -5,17 +5,37 @@
     <title>Formulario Producto</title>
     <link rel="stylesheet" href="/css/main.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
 </head>
 <body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="/img/logo.png" alt="Logo" width="40" class="me-2">
+        </a>
+        <div class="d-flex ms-auto align-items-center text-white">
+            <span class="me-3">Bienvenido, <strong th:text="${username}">admin</strong></span>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn btn-outline-light btn-sm" type="submit">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- FORMULARIO -->
 <div class="container mt-5">
-    <h2 th:text="${producto.id != null} ? 'Editar Producto' : 'Nuevo Producto'"></h2>
+    <h2 th:text="${producto.id != null} ? 'Editar Producto' : 'Nuevo Producto'" class="mb-4"></h2>
 
     <form th:action="@{/admin/productos/guardar}" th:object="${producto}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}" />
 
         <div class="mb-3">
             <label>Nombre:</label>
-           <input type="text" class="form-control" th:field="*{nombre}" />
+            <input type="text" class="form-control" th:field="*{nombre}" />
             <div class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
         </div>
 
@@ -40,8 +60,7 @@
                     <img th:src="@{${img}}" class="img-thumbnail mb-1" style="height: 100px;" />
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="imagenesAEliminar"
-                               th:id="'checkEliminar__' + ${iter.index}"
-                               th:value="${img}" />
+                               th:id="'checkEliminar__' + ${iter.index}" th:value="${img}" />
                         <label class="form-check-label text-danger" th:for="'checkEliminar__' + ${iter.index}">Eliminar</label>
                     </div>
                 </div>
@@ -58,19 +77,29 @@
             <label>Categoría:</label>
             <select class="form-control" th:field="*{categoria.id}">
                 <option value="" disabled>Selecciona una categoría</option>
-                <option th:each="cat : ${categorias}"
-                        th:value="${cat.id}"
-                        th:text="${cat.nombre}">
-                </option>
+                <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
             </select>
             <div class="text-danger" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}"></div>
         </div>
 
-        <button class="btn btn-primary" type="submit">Guardar</button>
-        <a class="btn btn-secondary" th:href="@{/admin/productos}">Cancelar</a>
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-save"></i> Guardar
+            </button>
+            <a class="btn btn-secondary" th:href="@{/admin/productos}">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+        </div>
     </form>
+
+    <div class="mt-4">
+        <a href="/admin/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left-circle"></i> Volver al Dashboard
+        </a>
+    </div>
 
     <script src="/js/form-producto.js"></script>
 </div>
+
 </body>
 </html>
