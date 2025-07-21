@@ -54,7 +54,7 @@ public class SecurityConfig {
 
                 .exceptionHandling(ex -> ex
                         .accessDeniedPage("/403")
-                        .authenticationEntryPoint(authenticationEntryPoint) // 🔒 para NO autenticados
+                        .authenticationEntryPoint(authenticationEntryPoint)
                 )
 
                 .logout(logout -> logout

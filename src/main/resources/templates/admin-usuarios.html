@@ -39,16 +39,20 @@
     <table class="table table-hover table-striped align-middle">
       <thead class="table-dark text-center">
       <tr>
-        <th>ID</th>
-        <th>Nombre de usuario</th>
-        <th>Rol</th>
+        <th>Usuario</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Correo</th>
+        <th>Rol(es)</th>
         <th>Acciones</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="usuario : ${usuarios}" class="text-center">
-        <td th:text="${usuario.id}"></td>
         <td th:text="${usuario.username}"></td>
+        <td th:text="${usuario.nombre}"></td>
+        <td th:text="${usuario.apellido}"></td>
+        <td th:text="${usuario.email}"></td>
         <td>
           <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre + ' '}"></span>
         </td>

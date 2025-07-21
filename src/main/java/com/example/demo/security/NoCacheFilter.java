@@ -17,7 +17,7 @@ public class NoCacheFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        // Solo aplicar a rutas protegidas (opcional)
+        // Solo aplicar a rutas protegidas
         String uri = req.getRequestURI();
         if (uri.startsWith("/admin")) {
             res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
