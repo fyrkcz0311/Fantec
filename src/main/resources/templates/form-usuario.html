@@ -36,7 +36,10 @@
     <!-- NOMBRE -->
     <div class="mb-3">
       <label class="form-label">Nombre</label>
-      <input type="text" th:field="*{nombre}" class="form-control" required>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person"></i></span>
+        <input type="text" th:field="*{nombre}" class="form-control" required>
+      </div>
       <div class="invalid-feedback">Este campo es obligatorio.</div>
       <div class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
     </div>
@@ -44,7 +47,10 @@
     <!-- APELLIDO -->
     <div class="mb-3">
       <label class="form-label">Apellido</label>
-      <input type="text" th:field="*{apellido}" class="form-control" required>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+        <input type="text" th:field="*{apellido}" class="form-control" required>
+      </div>
       <div class="invalid-feedback">Este campo es obligatorio.</div>
       <div class="text-danger" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
     </div>
@@ -52,7 +58,10 @@
     <!-- EMAIL -->
     <div class="mb-3">
       <label class="form-label">Correo electrónico</label>
-      <input type="email" th:field="*{email}" class="form-control" required>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+        <input type="email" th:field="*{email}" class="form-control" required>
+      </div>
       <div class="invalid-feedback">Ingresa un correo válido.</div>
       <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
     </div>
@@ -60,16 +69,22 @@
     <!-- USERNAME -->
     <div class="mb-3">
       <label class="form-label">Username</label>
-      <input type="text" th:field="*{username}" class="form-control" required>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+        <input type="text" th:field="*{username}" class="form-control" required>
+      </div>
       <div class="invalid-feedback">Este campo es obligatorio.</div>
       <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
     </div>
 
     <!-- PASSWORD -->
     <div class="mb-3">
-      <label class="form-label">Password</label>
-      <input type="password" th:field="*{password}" class="form-control"
-             th:placeholder="${usuario.id != null ? 'Dejar vacío para mantener la actual' : ''}">
+      <label class="form-label">Contraseña</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+        <input type="password" th:field="*{password}" class="form-control"
+               th:placeholder="${usuario.id != null ? 'Cambiar Contraseña' : ''}">
+      </div>
       <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
     </div>
 
