@@ -89,7 +89,6 @@ src/main/java/com/example/demo/
 ## 📦 Base de Datos
 
 - MySQL
-- Archivos `.sql` para inicializar tablas y datos disponibles en `/resources/db/`.
 - Entidades están anotadas con JPA y validadas con `jakarta.validation`.
 
 ## 🛠️ Cómo ejecutar
