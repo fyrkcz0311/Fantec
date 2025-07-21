@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Categoria;
 import com.example.demo.repository.CategoriaRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,18 +18,22 @@ public class CategoriaController {
         this.categoriaRepository = categoriaRepository;
     }
 
+
     @GetMapping
     public String listarCategorias(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("username", auth.getName());
         model.addAttribute("categorias", categoriaRepository.findAll());
-        return "admin-categorias"; // ← nombre correcto del HTML
+        return "admin-categorias";
     }
 
     @GetMapping("/nueva")
     public String mostrarFormularioNueva(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("categoria", new Categoria());
-        return "form-categorias"; // ← nombre correcto del HTML
+        model.addAttribute("username", auth.getName());
+        return "form-categorias";
     }
-
     @PostMapping("/guardar")
     public String guardarCategoria(@ModelAttribute Categoria categoria) {
         categoriaRepository.save(categoria);

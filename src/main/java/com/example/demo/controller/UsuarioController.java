@@ -6,6 +6,8 @@ import com.example.demo.repository.RolRepository;
 import com.example.demo.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,12 +34,17 @@ public class UsuarioController {
 
     @GetMapping
     public String listarUsuarios(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("username", auth.getName());
         model.addAttribute("usuarios", usuarioRepository.findAll());
         return "admin-usuarios";
     }
 
     @GetMapping("/nuevo")
     public String nuevoUsuario(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("username", auth.getName());
+
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("roles", rolRepository.findAll());
         return "form-usuario";
