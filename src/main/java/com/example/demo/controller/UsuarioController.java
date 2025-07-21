@@ -44,7 +44,6 @@ public class UsuarioController {
     public String nuevoUsuario(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("username", auth.getName());
-
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("roles", rolRepository.findAll());
         return "form-usuario";
@@ -54,28 +53,35 @@ public class UsuarioController {
     public String guardarUsuario(
             @Valid @ModelAttribute("usuario") Usuario usuario,
             BindingResult result,
-            @RequestParam List<Long> rolesSeleccionados,
+            @RequestParam(required = false) List<Long> rolesSeleccionados,
             Model model
     ) {
-        // Verificar si el username ya existe (solo en nuevos usuarios o si cambia el username)
-        Optional<Usuario> existente = usuarioRepository.findByUsername(usuario.getUsername());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("username", auth.getName());
+
         boolean esNuevo = usuario.getId() == null;
+
+        // Validar si el username ya existe
+        Optional<Usuario> existente = usuarioRepository.findByUsername(usuario.getUsername());
         if (existente.isPresent() && (esNuevo || !existente.get().getId().equals(usuario.getId()))) {
             result.rejectValue("username", "error.usuario", "El nombre de usuario ya existe");
         }
 
+        // Si hay errores, volver al formulario
         if (result.hasErrors()) {
             model.addAttribute("roles", rolRepository.findAll());
             return "form-usuario";
         }
 
-        Set<Rol> roles = new HashSet<>(rolRepository.findAllById(rolesSeleccionados));
+        // Asignar roles
+        Set<Rol> roles = new HashSet<>(rolRepository.findAllById(
+                rolesSeleccionados != null ? rolesSeleccionados : List.of()
+        ));
         usuario.setRoles(roles);
 
+        // Manejar contraseña
         if (!esNuevo) {
             Usuario existenteDb = usuarioRepository.findById(usuario.getId()).orElseThrow();
-
-            // Mantener contraseña si el campo está vacío
             if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
                 usuario.setPassword(existenteDb.getPassword());
             } else {
@@ -91,6 +97,8 @@ public class UsuarioController {
 
     @GetMapping("/editar/{id}")
     public String editarUsuario(@PathVariable Long id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("username", auth.getName());
         Usuario usuario = usuarioRepository.findById(id).orElseThrow();
         model.addAttribute("usuario", usuario);
         model.addAttribute("roles", rolRepository.findAll());
