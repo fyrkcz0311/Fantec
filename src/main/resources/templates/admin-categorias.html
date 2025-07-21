@@ -39,14 +39,12 @@
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-dark text-center">
             <tr>
-                <th>ID</th>
                 <th>Nombre</th>
                 <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="cat : ${categorias}">
-                <td th:text="${cat.id}" class="text-center"></td>
                 <td th:text="${cat.nombre}" class="text-center"></td>
                 <td class="text-center">
                     <a th:href="@{/admin/categorias/editar/{id}(id=${cat.id})}" class="btn btn-warning btn-sm me-1">
