@@ -30,21 +30,26 @@
 <div class="container mt-5">
   <h2 th:text="${usuario.id != null ? 'Editar Usuario' : 'Nuevo Usuario'}" class="mb-4"></h2>
 
-  <form th:action="@{/admin/usuarios/guardar}" method="post" class="needs-validation" novalidate>
+  <form th:action="@{/admin/usuarios/guardar}" th:object="${usuario}" method="post" class="needs-validation" novalidate>
     <input type="hidden" th:field="*{id}"/>
 
+    <!-- USERNAME -->
     <div class="mb-3">
       <label class="form-label">Username</label>
       <input type="text" th:field="*{username}" class="form-control" required>
       <div class="invalid-feedback">Este campo es obligatorio.</div>
+      <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
     </div>
 
+    <!-- PASSWORD -->
     <div class="mb-3">
       <label class="form-label">Password</label>
       <input type="password" th:field="*{password}" class="form-control"
-             th:placeholder="${usuario.id != null ? 'Dejar vacío para mantener la actual' : ''}"/>
+             th:placeholder="${usuario.id != null ? 'Dejar vacío para mantener la actual' : ''}">
+      <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
     </div>
 
+    <!-- ROLES -->
     <div class="mb-3">
       <label class="form-label">Rol(es)</label>
       <select multiple class="form-control" name="rolesSeleccionados" required>
@@ -55,6 +60,7 @@
       </select>
     </div>
 
+    <!-- BOTONES -->
     <div class="d-flex gap-2">
       <button type="submit" class="btn btn-primary">
         <i class="bi bi-save"></i> Guardar
@@ -66,7 +72,7 @@
   </form>
 </div>
 
-<!-- Validación -->
+<!-- VALIDACIÓN JS -->
 <script>
   (() => {
     'use strict';

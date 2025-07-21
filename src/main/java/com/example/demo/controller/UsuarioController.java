@@ -4,14 +4,17 @@ import com.example.demo.model.Rol;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.RolRepository;
 import com.example.demo.repository.UsuarioRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -23,6 +26,7 @@ public class UsuarioController {
 
     @Autowired
     private RolRepository rolRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -40,21 +44,37 @@ public class UsuarioController {
     }
 
     @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute Usuario usuario, @RequestParam List<Long> rolesSeleccionados) {
+    public String guardarUsuario(
+            @Valid @ModelAttribute("usuario") Usuario usuario,
+            BindingResult result,
+            @RequestParam List<Long> rolesSeleccionados,
+            Model model
+    ) {
+        // Verificar si el username ya existe (solo en nuevos usuarios o si cambia el username)
+        Optional<Usuario> existente = usuarioRepository.findByUsername(usuario.getUsername());
+        boolean esNuevo = usuario.getId() == null;
+        if (existente.isPresent() && (esNuevo || !existente.get().getId().equals(usuario.getId()))) {
+            result.rejectValue("username", "error.usuario", "El nombre de usuario ya existe");
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("roles", rolRepository.findAll());
+            return "form-usuario";
+        }
+
         Set<Rol> roles = new HashSet<>(rolRepository.findAllById(rolesSeleccionados));
         usuario.setRoles(roles);
 
-        if (usuario.getId() != null) {
-            Usuario existente = usuarioRepository.findById(usuario.getId()).orElseThrow();
+        if (!esNuevo) {
+            Usuario existenteDb = usuarioRepository.findById(usuario.getId()).orElseThrow();
 
-            // Si no cambia la contraseña, se mantiene
+            // Mantener contraseña si el campo está vacío
             if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
-                usuario.setPassword(existente.getPassword());
+                usuario.setPassword(existenteDb.getPassword());
             } else {
                 usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             }
         } else {
-            // Nuevo usuario: encriptar siempre
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
 
